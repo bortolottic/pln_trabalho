@@ -1,6 +1,10 @@
 import streamlit as st
 import time
 
+from llm.openai import get_response_function
+from lib.errors import AnalysisError
+from lib.text_analysis import avaiable_analysis_functions
+
 # Configuração da página
 st.set_page_config("Transcritor", page_icon=":movie_camera:")
 
@@ -23,7 +27,7 @@ def write_message(role, content, save=True):
 def handle_submit(message):
     """ Controlar a submissão do formulário """
     with st.spinner("Pensando ..."):
-        response = message # sa.generate_response(message)
+        response = get_response_function(st.session_state.messages, available_functions=avaiable_analysis_functions)
         time.sleep(1)
         write_message("assistant", response)
 
