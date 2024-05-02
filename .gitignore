@@ -1,1 +1,4 @@
 *.toml
+*.pyc
+ffmpeg-master-latest-linux64-gpl
+*.wav

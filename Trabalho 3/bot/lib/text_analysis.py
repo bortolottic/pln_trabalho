@@ -1,13 +1,13 @@
-from errors import AnalysisError
+from .errors import AnalysisError
 
 def get_search_term(terms : list):
-    raise AnalysisError("get_search_term")
+    return f"get_search_term = {','.join(terms)}"
 
-def get_search_things(terms : list):
-    raise AnalysisError("get_search_things")
+def get_search_things(things : list):
+    return f"get_search_things = {','.join(things)}"
 
 def get_sentiment_analysis(sentences : list):
-    raise AnalysisError("get_sentiment_analysis")
+    return f"get_sentiment_analysis = {','.join(sentences)}"
 
 avaiable_analysis_functions = {
     "get_search_term": get_search_term,

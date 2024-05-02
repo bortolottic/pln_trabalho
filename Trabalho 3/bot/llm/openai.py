@@ -9,8 +9,9 @@ model = st.secrets.get("OPENAI_MODEL")
 default_prompt = """
 Você será identificado como Pegasus o cavalo sabichão.
 Sua função será responder questões referente a transcrição de uma reunião.
-Não será fornecido conhecimento algum referente a transcrição, você apenas irá determinar a intenção do usuário e chamar a função adequada para responder a pergunta.
-Não use seu conhecimento prévio para responder perguntas fora do seu contexto.
+Você apenas irá determinar a intenção do usuário e chamar a função adequada para responder a pergunta.
+Não use seu conhecimento prévio para responder perguntas.
+Apenas identifique a intenção do usuário.
 
 Você precisa atender a três pedidos especiais de busca:
 
@@ -47,7 +48,10 @@ def get_response_function(context_messages : list, available_functions : dict) -
                     "type": "object",
                     "properties": {
                         "terms": {
-                            "type": "list",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
                             "description": "Array ou lista de strings que contém os termos a serem pesquisados",
                         }
                     },
@@ -64,7 +68,10 @@ def get_response_function(context_messages : list, available_functions : dict) -
                     "type": "object",
                     "properties": {
                         "things": {
-                            "type": "list",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
                             "description": "Array ou lista de strings que contém as coisas a serem pesquisados",
                         }
                     },
@@ -81,7 +88,10 @@ def get_response_function(context_messages : list, available_functions : dict) -
                     "type": "object",
                     "properties": {
                         "sentences": {
-                            "type": "list",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
                             "description": "Array ou lista de strings que contém as frases a serem analisadas. Somente as frases retornadas pelas funções mencionadas.",
                         }
                     },
@@ -102,6 +112,7 @@ def get_response_function(context_messages : list, available_functions : dict) -
     tool_calls = response_message.tool_calls
         
     if tool_calls:
+        print("vai chamar")
         messages.append(response_message)
 
         for tool_call in tool_calls:
@@ -117,13 +128,16 @@ def get_response_function(context_messages : list, available_functions : dict) -
                     "content": function_response,
                 }
             )
+            print("chamou", function_name, function_response)
         
         second_response = client.chat.completions.create(
             model=model,
             messages=messages,
         )
 
-        return second_response
+        second_response_message = second_response.choices[0].message.content
+
+        return second_response_message
     
     else:
-        return response_message
+        return response_message.content
