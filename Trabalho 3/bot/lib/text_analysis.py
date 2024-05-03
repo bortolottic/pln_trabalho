@@ -13,7 +13,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 
 def load_dataset():
-    with open('./bot/data/dataset.pkl', '+rb') as file:
+    with open('./data/dataset.pkl', '+rb') as file:
         r = pkl.load(file)
     return r
 
